@@ -1,7 +1,7 @@
 {
   "name": "senegraph",
-  "version": "0.0.1",
-  "description": "Hapi JS plugin connecting Seneca(Chairo) with GraphQL",
+  "version": "0.0.2",
+  "description": "Hapi JS plugin connecting SenecaJS with GraphQL",
   "main": "index.js",
   "scripts": {
     "test": "mocha -r ts-node/register src/**/test.ts"
