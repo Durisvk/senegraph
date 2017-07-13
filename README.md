@@ -21,7 +21,7 @@ import * as hapi from 'hapi';
 import { senegraph, hapiql } from 'senegraph';
 
 // setup Hapi server
-const server = hapi.Server();
+const server = new hapi.Server();
 server.connection({ port: 3000 });
 
 // register the plugins
