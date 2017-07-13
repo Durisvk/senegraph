@@ -31,7 +31,7 @@ server.register([{
 }, {
     register: hapiql,
     options: {
-        path: '/graphiql' // Optional default '/graphiql'
+        path: '/graphiql', // Optional default '/graphiql'
         hapiqlOptions: {
             endpointURL: '/graphql', // required - pointing to the graphQL route
         },
@@ -55,45 +55,51 @@ Now the `senegraphOptions` variable can look like this:
 const senegraphOptions = {
     // Setting up the seneca microservices
     setupSeneca: (seneca) => {
-        // we can return a promise if we need it
-        // to wait for some async operation
-        seneca.add({ role: 'greeter', cmd: 'sayHello' }, (message, done) => {
-            if(message.user) {
-                done(null, { message: 'Hello ' + message.user });
-            } else {
-                done(new Error('You forgot to tell me who you are');
-        });
-    }
+      // we can return a promise if we need it
+      // to wait for some async operation
+      seneca.add({
+        role: 'greeter',
+        cmd: 'sayHello'
+      }, (message, done) => {
+        if (message.user) {
+          done(null, {
+            message: 'Hello ' + message.user
+          });
+        } else {
+          done(new Error('You forgot to tell me who you are'));
+        };
+      });
+    },
     // Setting up the schema (for this example it's pretty simple
     // but you can for example split it into multiple modules
     schema: `
-        type Query {
-            hello(name: String!): String
-        }
-    `,
-    resolvers: {
-        Query: {
-            // third argument is context, which contains
-            // the seneca that we can use for our purpose
-            hello: (root, { name }, { seneca }) => {
-                // we need to use promise
-                // but we could use bluebird's Promisify
-                // on seneca, check the links below
-                return new Promise((resolve, reject) => {
-                    seneca.act({
-                        role: 'greeter',
-                        cmd: 'sayHello',
-                        user: name,
-                    }, (err, greetings) => {
-                        if(err) {
-                            reject(err);
-                        } else {
-                            resolve(greetings.message);
-                        }
-                    });
-                });
+            type Query {
+                hello(name: String!): String
             }
+        `,
+    resolvers: {
+      Query: {
+        // third argument is context, which contains
+        // the seneca that we can use for our purpose
+        hello: (root, { name }, { seneca }) => {
+          // we need to use promise
+          // but we could use bluebird's Promisify
+          // on seneca, check the links below
+          return new Promise((resolve, reject) => {
+            seneca.act({
+              role: 'greeter',
+              cmd: 'sayHello',
+              user: name,
+            }, (err, greetings) => {
+              if (err) {
+                reject(err);
+              } else {
+                resolve(greetings.message);
+              }
+            });
+          });
         }
+      }
     }
 }
 ```
