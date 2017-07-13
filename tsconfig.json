@@ -1,0 +1,26 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "declaration": true,
+    "noImplicitAny": false,
+    "allowSyntheticDefaultImports": false,
+    "pretty": true,
+    "noImplicitAny" : true,
+    "removeComments": true,
+    "lib": ["es6"],
+    "allowJs": true,
+    "typeRoots": [ "node_modules/@types/" ],
+    "types": [
+      "@types/node",
+      "@types/mocha",
+      "@types/chai"
+    ]
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}
