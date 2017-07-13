@@ -253,6 +253,72 @@ describe('Senegraph Plugin Tests', () => {
     });
   });
 
+  it('senegraph plugin should add a custom context and rootValue', () => {
+    let options = {
+      schema: testSimpleSchema,
+      resolvers: {
+        Query: {
+          hello: (root: any, args: any, context: any) => {
+            expect(root.other).to.be.equal('some');
+            expect(context.some).to.be.equal('data');
+            return 'world';
+          }
+        }
+      },
+      perRequest: (seneca: any) => {
+        return {
+          context: { some: 'data' },
+          rootValue: { other: 'some' },
+        }
+      }
+    };
+
+    return createApp(options).then((app: hapi.ServerListener) => {
+      return request(app).post('/graphql').send({
+        query: 'query test { hello }',
+      }).then((res: any) => {
+        if (res.body.errors) {
+          expect(res.body.errors).to.have.lengthOf(0);
+        }
+      });
+    });
+  });
+
+  it('senegraph plugin should add a custom context and rootValue with promise', () => {
+    let options = {
+      schema: testSimpleSchema,
+      resolvers: {
+        Query: {
+          hello: (root: any, args: any, context: any) => {
+            expect(root.other).to.be.equal('some');
+            expect(context.some).to.be.equal('data');
+            return 'world';
+          }
+        }
+      },
+      perRequest: (seneca: any) => {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve({
+              context: { some: 'data' },
+              rootValue: { other: 'some' },
+            });
+          }, 200)
+        })
+      }
+    };
+
+    return createApp(options).then((app: hapi.ServerListener) => {
+      return request(app).post('/graphql').send({
+        query: 'query test { hello }',
+      }).then((res: any) => {
+        if (res.body.errors) {
+          expect(res.body.errors).to.have.lengthOf(0);
+        }
+      });
+    });
+  });
+
   it('senegraph plugin should pass the integration tests', () => {
     let options = {
       schema: `
