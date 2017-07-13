@@ -155,4 +155,4 @@ cool isn't it? You can do for example authentication on every single request.
 | setupSeneca |                      Function (seneca) => {}                     |                                       Is being called at the beginning. This option is optional.                                      |
 |     path    |                              String                              |                                Default: '/graphql', Sets the API endpoint url. This option is optional                                |
 |   methods   |                    Array ['GET', 'POST', ...]                    |                      Default: ['GET', 'POST'], Sets the method accepted by the endpoint. This option is optional                      |
-|  perRequest | Promise<Object> || Function<Object> || Function<Promise<Object>> | Is being called on every request. Can be Promise or function returning object or function returning  Promise. This option is optional |
+|  perRequest | Promise<Object> OR Function<Object> OR Function<Promise<Object>> | Is being called on every request. Can be Promise or function returning object or function returning  Promise. This option is optional |
