@@ -153,6 +153,64 @@ describe('Senegraph Plugin Tests', () => {
             });
         });
     });
+    it('senegraph plugin should call perRequest with seneca and request arguments', () => {
+        let options = {
+            schema: testSimpleSchema_1.default,
+            resolvers: testSimpleResolvers_1.default,
+            perRequest: (seneca, request) => {
+                expect(seneca).to.exist;
+                expect(request).to.exist;
+            }
+        };
+        return createApp(options).then((app) => {
+            return request(app).post('/graphql').send({
+                query: 'query test { hello }'
+            }).then((res) => {
+                expect(res.body.errors).not.to.exist;
+                return res;
+            });
+        });
+    });
+    it('senegraph plugin should call perRequest and return error if it occurs', () => {
+        let options = {
+            schema: testSimpleSchema_1.default,
+            resolvers: testSimpleResolvers_1.default,
+            perRequest: (seneca, request) => {
+                return new Error('This is the test error');
+            }
+        };
+        return createApp(options).then((app) => {
+            return request(app).post('/graphql').send({
+                query: 'query test { hello }'
+            }).then((res) => {
+                expect(res.body.errors).to.exist;
+                expect(res.body.errors).have.lengthOf(1);
+                return res;
+            });
+        });
+    });
+    it('senegraph plugin should call perRequest and return error if it occurs in Promise', () => {
+        let options = {
+            schema: testSimpleSchema_1.default,
+            resolvers: testSimpleResolvers_1.default,
+            perRequest: (seneca, request) => {
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        reject(new Error('This is the test error'));
+                    }, 200);
+                });
+            }
+        };
+        return createApp(options).then((app) => {
+            return request(app).post('/graphql').send({
+                query: 'query test { hello }'
+            }).then((res) => {
+                expect(res.body.errors).to.exist;
+                expect(res.body.errors).have.lengthOf(1);
+                return res;
+            });
+        });
+    });
     it('senegraph plugin should provide the seneca in resolvers context', () => {
         let options = {
             schema: testSimpleSchema_1.default,

@@ -64,7 +64,7 @@ const senegraph: IRegister = function(server: Server, options: ISenegraphOptions
 
 senegraph.attributes = {
   name: 'senegraph',
-  version: '1.0.0',
+  version: '0.0.5',
   pkg: require('../package.json'),
 };
 
@@ -84,7 +84,7 @@ const hapiql: IRegister = function(server: Server, options: IHapiQLOptions, next
 
 hapiql.attributes = {
   name: 'hapiql',
-  version: '1.0.0',
+  version: '0.0.5',
   pkg: require('../package.json'),
 };
 
@@ -111,8 +111,11 @@ _internals.setupGraphQLRoute = function(server: Server, options: ISenegraphOptio
     method: options.methods || ['POST', 'GET'],
     handler: (request: Request, reply: ReplyNoContinue) => {
       _internals.runPerRequest(options, request, reply, seneca)
-        .then((userParams: IPerRequestResult) => {
-          _internals.executeGraphQLQuery(request, reply, execSchema, userParams);
+        .then((userParams: IPerRequestResult | Error) => {
+          if (_.isError(userParams)) {
+            return reply({errors: [{ message: 'Failed on perRequest with message: ' + userParams.message }]});
+          }
+          _internals.executeGraphQLQuery(request, reply, execSchema, <IPerRequestResult>userParams);
         })
         .catch((err: Error) => { throw err; });
     },
@@ -141,31 +144,50 @@ _internals.runPerRequest = function(options: ISenegraphOptions, request: Request
 
     let promise = null;
     if (_.isFunction(options.perRequest)) {
-      const result = (<Function>options.perRequest).call(seneca, seneca);
-      if (_internals.isPromise(result)) {
-        promise = result;
-      } else if (_.isObject(result)) {
-        promise = Promise.resolve(result);
+      let result = null;
+      try {
+        result = (<Function>options.perRequest).call(seneca, seneca, request);
+      } catch (e) {
+        promise = Promise.resolve(e);
+      }
+      if (!_.isNull(result) && !_.isUndefined(result)) {
+        if (_internals.isPromise(result)) {
+          promise = result;
+        } else if (_.isObject(result)) {
+          promise = Promise.resolve(result);
+        } else if (_.isError(result)) {
+          promise = Promise.resolve(result);
+        } else {
+          const type = typeof result;
+          return reject(new Error(`Invalid perRequest option type. Should be either Promise<object>,
+            Function<Promise<object>> or Function<object>, got: ${type}`));
+        }
       } else {
-        const type = typeof result;
-        return reject(`Invalid perRequest option type. Should be either Promise<object>,
-          Function<Promise<object>> or Function<object>, got: ${type}`);
+        promise = Promise.resolve({});
       }
     } else if (_internals.isPromise(options.perRequest)) {
       promise = options.perRequest;
     } else {
       const type = typeof options.perRequest;
-      return reject(`Invalid perRequest option type. Should be either Promise<object>,
-        Function<Promise<object>> or Function<object>, got: ${type}`);
+      return reject(new Error(`Invalid perRequest option type. Should be either Promise<object>,
+        Function<Promise<object>> or Function<object>, got: ${type}`));
     }
 
     promise.then((result: object) => {
-      if (_.isObject(result)) {
+      if (_.isObject(result) || _.isError(result)) {
         resolve(result);
       } else {
         const type = typeof result;
-        return reject(`Invalid perRequest option resulting type. Should be either Promise<object>,
-          Function<Promise<object>> or Function<object>, got result: ${type}`);
+        return reject(new Error(`Invalid perRequest option resulting type. Should be either Promise<object>,
+          Function<Promise<object>> or Function<object>, got result: ${type}`));
+      }
+    })
+    .catch((err: Error) => {
+      if (_.isError(err)) {
+        resolve(err);
+      } else {
+        const type = typeof err;
+        return reject(new Error(`The rejection should contain Error. Got: ${type}`));
       }
     });
   });
