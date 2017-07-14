@@ -2,7 +2,7 @@ import { Server, Response, Request, ReplyNoContinue, HTTP_METHODS_PARTIAL} from 
 import { makeExecutableSchema } from 'graphql-tools';
 import { graphql } from 'graphql';
 import * as Seneca from 'seneca';
-import * as GraphiQL from 'graphql-server-module-graphiql';
+import * as GraphiQL from './graphiql/resolveGraphiQLString';
 import * as _ from 'lodash';
 
 import * as JSON5 from 'json5';
