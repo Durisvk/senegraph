@@ -10,15 +10,15 @@ import * as JSON5 from 'json5';
 import * as bodyParser from 'body-parser';
 
 
-const seneca = Seneca();
+let seneca: any = null;
 import { enrichSeneca, runPerRequest, IPerRequestResult } from './common';
-enrichSeneca(seneca);
 
 export interface ISenegraphExpressOptions {
   schema: string;
   resolvers: object;
   setupSeneca?: Function;
   perRequest?: Promise<object> | Function;
+  senecaOptions?: any;
 }
 
 export type ExpressiQLOptions = {
@@ -35,6 +35,10 @@ export type ExpressiQLOptions = {
 const _internals: any = {};
 
 const senegraphExpress = function(options: ISenegraphExpressOptions) {
+
+  seneca = Seneca(options.senecaOptions);
+  enrichSeneca(seneca);
+
   if (options.setupSeneca) {
     options.setupSeneca(seneca);
   }

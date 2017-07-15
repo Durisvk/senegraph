@@ -1,5 +1,5 @@
 import * as chai from 'chai';
-import { senegraphExpress } from '../lib/index';
+import { senegraphExpress, ISenegraphExpressOptions } from '../lib/index';
 
 import testSimpleSchema from './testSimpleSchema';
 import testSimpleResolvers from './testSimpleResolvers';
@@ -26,7 +26,11 @@ describe('SenegraphExpress Types Tests', () => {
 
 });
 
-function createApp(options: any) {
+function createApp(options: ISenegraphExpressOptions) {
+  options.senecaOptions = {
+    log: 'test',
+  }
+
   const app = Express();
   app.use('/graphql', senegraphExpress(options));
   return app;

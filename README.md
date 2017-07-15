@@ -159,6 +159,9 @@ cool isn't it? You can do for example authentication on every single request.
 |   methods   |                    Array ['GET', 'POST', ...]                    |                      Default: ['GET', 'POST'], Sets the method accepted by the endpoint. This option is optional                      |
 |  perRequest | Promise<Object> OR Function<Object> OR Function<Promise<Object>> | Is being called on every request. Can be Promise or function returning object or function returning  Promise. This option is optional |
 
+
++ You can add a senecaOptions to modify the logging or so.
+
 Check out this video: https://youtu.be/VWPVrJU2upw
 
 
@@ -187,3 +190,6 @@ Now the senegraphOptions could look the same as in Hapi example...
 |  resolvers  |                              Object!                             |                               Containing the resolvers of your graphql schema. This option is required.                               |
 | setupSeneca |                      Function (seneca) => {}                     |                                       Is being called at the beginning. This option is optional.                                      |
 |  perRequest | Promise<Object> OR Function<Object> OR Function<Promise<Object>> | Is being called on every request. Can be Promise or function returning object or function returning  Promise. This option is optional |
+
+
++ You can add a senecaOptions to modify the logging or so.

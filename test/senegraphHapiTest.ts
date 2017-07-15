@@ -34,6 +34,10 @@ function createApp(options: ISenegraphHapiOptions, done?: Function): Promise<hap
   return new Promise<hapi.ServerListener>((resolve, reject) => {
     const server = new hapi.Server();
 
+    options.senecaOptions = {
+      log: 'test',
+    }
+
     server.connection({
       host: 'localhost',
       port: 8000,

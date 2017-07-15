@@ -7,9 +7,8 @@ import * as _ from 'lodash';
 
 import * as JSON5 from 'json5';
 
-const seneca = Seneca();
+let seneca: any = null;
 import { enrichSeneca, runPerRequest, IPerRequestResult } from './common';
-enrichSeneca(seneca);
 
 import * as Promise from 'bluebird';
 
@@ -29,6 +28,7 @@ export interface ISenegraphHapiOptions {
   path?: string;
   methods?: HTTP_METHODS_PARTIAL | '*' | (HTTP_METHODS_PARTIAL | '*')[];
   perRequest?: Promise<object> | Function;
+  senecaOptions?: any;
 }
 
 export interface IHapiQLOptions {
@@ -46,6 +46,10 @@ const senegraphHapi: IRegister = function(server: Server, options: ISenegraphHap
     throw new Error(`Senegraph expects exactly 3 arguments, got ${arguments.length}`);
   }
 
+  seneca = Seneca(options.senecaOptions);
+  enrichSeneca(seneca);
+
+
   let setupSenecaResult: any = null;
   if (options.setupSeneca) {
     setupSenecaResult = options.setupSeneca.call(seneca, seneca);
@@ -62,7 +66,7 @@ const senegraphHapi: IRegister = function(server: Server, options: ISenegraphHap
 
 senegraphHapi.attributes = {
   name: 'senegraph',
-  version: '0.0.8',
+  version: '0.0.9',
   pkg: require('../package.json'),
 };
 
@@ -82,7 +86,7 @@ const hapiql: IRegister = function(server: Server, options: IHapiQLOptions, next
 
 hapiql.attributes = {
   name: 'hapiql',
-  version: '0.0.8',
+  version: '0.0.9',
   pkg: require('../package.json'),
 };
 

@@ -18,6 +18,9 @@ describe('SenegraphExpress Types Tests', () => {
     });
 });
 function createApp(options) {
+    options.senecaOptions = {
+        log: 'test',
+    };
     const app = Express();
     app.use('/graphql', index_1.senegraphExpress(options));
     return app;

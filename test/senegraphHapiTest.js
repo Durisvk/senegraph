@@ -24,6 +24,9 @@ describe('SenegraphHapi Types Tests', () => {
 function createApp(options, done) {
     return new Promise((resolve, reject) => {
         const server = new hapi.Server();
+        options.senecaOptions = {
+            log: 'test',
+        };
         server.connection({
             host: 'localhost',
             port: 8000,
