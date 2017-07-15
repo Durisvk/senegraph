@@ -193,3 +193,6 @@ Now the senegraphOptions could look the same as in Hapi example...
 
 
 + You can add a senecaOptions to modify the logging or so.
+
+
+On both server frameworks you can run `seneca.actWithPromise` which is the `act` returning a promise.
