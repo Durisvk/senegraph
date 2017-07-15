@@ -1,5 +1,5 @@
 import * as chai from 'chai';
-import { senegraph, ISenegraphOptions } from '../lib/index';
+import { senegraphHapi, ISenegraphHapiOptions } from '../lib/index';
 
 import testSimpleSchema from './testSimpleSchema';
 import testSimpleResolvers from './testSimpleResolvers';
@@ -19,18 +19,18 @@ import * as hapi from 'hapi';
 
 import * as Promise from 'bluebird';
 
-describe('Senegraph Types Tests', () => {
-  it('senegraph should be a function', () => {
-    expect(senegraph).to.be.a('function');
+describe('SenegraphHapi Types Tests', () => {
+  it('senegraphHapi should be a function', () => {
+    expect(senegraphHapi).to.be.a('function');
   });
-  it('sengraph.attributes should be an object', () => {
-    expect(senegraph.attributes).to.be.an('object');
+  it('senegraphHapi.attributes should be an object', () => {
+    expect(senegraphHapi.attributes).to.be.an('object');
   })
 
 });
 
 
-function createApp(options: ISenegraphOptions, done?: Function): Promise<hapi.ServerListener> {
+function createApp(options: ISenegraphHapiOptions, done?: Function): Promise<hapi.ServerListener> {
   return new Promise<hapi.ServerListener>((resolve, reject) => {
     const server = new hapi.Server();
 
@@ -40,7 +40,7 @@ function createApp(options: ISenegraphOptions, done?: Function): Promise<hapi.Se
     });
 
     server.register({
-      register: senegraph,
+      register: senegraphHapi,
       options,
     }, (err: Error) => {
       if (err) {
@@ -51,8 +51,8 @@ function createApp(options: ISenegraphOptions, done?: Function): Promise<hapi.Se
   }).nodeify(done);
 }
 
-describe('Senegraph Plugin Tests', () => {
-  it('senegraph plugin should not fail when registering', () => {
+describe('SenegraphHapi Plugin Tests', () => {
+  it('senegraphHapi plugin should not fail when registering', () => {
     return expect(createApp({
       schema: testSimpleSchema,
       resolvers: {
@@ -64,7 +64,7 @@ describe('Senegraph Plugin Tests', () => {
       }
     })).to.be.fulfilled;
   });
-  it('senegraph plugin should add route handler and call simple graphql query', () => {
+  it('senegraphHapi plugin should add route handler and call simple graphql query', () => {
     return createApp({
       schema: testSimpleSchema,
       resolvers: testSimpleResolvers,
@@ -79,7 +79,7 @@ describe('Senegraph Plugin Tests', () => {
     });
   });
 
-  it('senegraph plugin should add a rootValue', () => {
+  it('senegraphHapi plugin should add a rootValue', () => {
     return createApp({
       schema: testSimpleSchema,
       resolvers: {
@@ -108,7 +108,7 @@ describe('Senegraph Plugin Tests', () => {
     });
   });
 
-  it('senegraph plugin should call perRequest on every request (twice)', () => {
+  it('senegraphHapi plugin should call perRequest on every request (twice)', () => {
     let options = {
       schema: testSimpleSchema,
       resolvers: testSimpleResolvers,
@@ -132,7 +132,7 @@ describe('Senegraph Plugin Tests', () => {
     });
   });
 
-  it('senegraph plugin should call perRequest with promise on every request (once)', () => {
+  it('senegraphHapi plugin should call perRequest with promise on every request (once)', () => {
     let options = {
       schema: testSimpleSchema,
       resolvers: testSimpleResolvers,
@@ -156,7 +156,7 @@ describe('Senegraph Plugin Tests', () => {
     });
   });
 
-  it('senegraph plugin should call resolver when queried (once)', () => {
+  it('senegraphHapi plugin should call resolver when queried (once)', () => {
     let options = {
       schema: testSimpleSchema,
       resolvers: testSimpleResolvers,
@@ -173,7 +173,7 @@ describe('Senegraph Plugin Tests', () => {
     });
   });
 
-  it('senegraph plugin should call perRequest with seneca and request arguments', () => {
+  it('senegraphHapi plugin should call perRequest with seneca and request arguments', () => {
     let options = {
       schema: testSimpleSchema,
       resolvers: testSimpleResolvers,
@@ -193,7 +193,7 @@ describe('Senegraph Plugin Tests', () => {
     });
   });
 
-  it('senegraph plugin should call perRequest and return error if it occurs', () => {
+  it('senegraphHapi plugin should call perRequest and return error if it occurs', () => {
     let options = {
       schema: testSimpleSchema,
       resolvers: testSimpleResolvers,
@@ -213,7 +213,7 @@ describe('Senegraph Plugin Tests', () => {
     });
   });
 
-  it('senegraph plugin should call perRequest and return error if it occurs in Promise', () => {
+  it('senegraphHapi plugin should call perRequest and return error if it occurs in Promise', () => {
     let options = {
       schema: testSimpleSchema,
       resolvers: testSimpleResolvers,
@@ -237,7 +237,7 @@ describe('Senegraph Plugin Tests', () => {
     });
   });
 
-  it('senegraph plugin should provide the seneca in resolvers context', () => {
+  it('senegraphHapi plugin should provide the seneca in resolvers context', () => {
     let options = {
       schema: testSimpleSchema,
       resolvers: {
@@ -265,7 +265,7 @@ describe('Senegraph Plugin Tests', () => {
   });
 
 
-  it('senegraph plugin should pass a variable into resolver', () => {
+  it('senegraphHapi plugin should pass a variable into resolver', () => {
     let options = {
       schema: testSchemaWithVariables,
       resolvers: {
@@ -295,7 +295,7 @@ describe('Senegraph Plugin Tests', () => {
   });
 
 
-  it('senegraph plugin should setup seneca with promise', () => {
+  it('senegraphHapi plugin should setup seneca with promise', () => {
     let options = {
       schema: testSimpleSchema,
       resolvers: testSimpleResolvers,
@@ -317,7 +317,7 @@ describe('Senegraph Plugin Tests', () => {
     });
   });
 
-  it('senegraph plugin should add a custom context and rootValue', () => {
+  it('senegraphHapi plugin should add a custom context and rootValue', () => {
     let options = {
       schema: testSimpleSchema,
       resolvers: {
@@ -348,7 +348,7 @@ describe('Senegraph Plugin Tests', () => {
     });
   });
 
-  it('senegraph plugin should add a custom context and rootValue with promise', () => {
+  it('senegraphHapi plugin should add a custom context and rootValue with promise', () => {
     let options = {
       schema: testSimpleSchema,
       resolvers: {
@@ -383,7 +383,7 @@ describe('Senegraph Plugin Tests', () => {
     });
   });
 
-  it('senegraph plugin should pass the integration tests', () => {
+  it('senegraphHapi plugin should pass the integration tests', () => {
     let options = {
       schema: `
         type Query {
@@ -441,4 +441,58 @@ describe('Senegraph Plugin Tests', () => {
     });
   });
 
+});
+
+
+it('senegraphHapi plugin should pass the integration tests with promise (seneca.actWithPromise)', () => {
+  let options = {
+    schema: `
+      type Query {
+        hello(name: String!): String
+      }
+    `,
+    resolvers: {
+      Query: {
+        hello: (root: any, args: any, context: any) => {
+          return context.seneca.actWithPromise({
+            role: 'greeter',
+            cmd: 'sayHello',
+            user: args.name,
+          }).then((result: any) => {
+            return result.message;
+          });
+        }
+      }
+    },
+    setupSeneca: (seneca: any) => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          seneca.add({ role: 'greeter', cmd: 'sayHello' }, (message: any, done: Function) => {
+            if (message.user) {
+              done(null, { message: 'Hello ' + message.user });
+            } else {
+              done(new Error('You forgot to tell me who you are.'))
+            }
+          });
+          resolve();
+        }, 100);
+      });
+    }
+  };
+
+  return createApp(options).then((app: hapi.ServerListener) => {
+    return request(app).post('/graphql').send({
+      query: 'query test($variable: String!) { hello(name: $variable) }',
+      variables: { variable: 'durisvk' },
+    }).then((res: any) => {
+      expect(res.body.data).to.deep.equal({ hello: 'Hello durisvk' });
+      return request(app).get('/graphql').query({
+        query: 'query test($variable: String!) { hello(name: $variable) }',
+        variables: '{ variable: "durisvk" }',
+      });
+    }).then((res: any) => {
+      expect(res.body.data).to.deep.equal({ hello: 'Hello durisvk' });
+      return res;
+    });
+  });
 });

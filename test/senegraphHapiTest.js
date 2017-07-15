@@ -13,12 +13,12 @@ const expect = chai.expect;
 const assert = chai.assert;
 const hapi = require("hapi");
 const Promise = require("bluebird");
-describe('Senegraph Types Tests', () => {
-    it('senegraph should be a function', () => {
-        expect(index_1.senegraph).to.be.a('function');
+describe('SenegraphHapi Types Tests', () => {
+    it('senegraphHapi should be a function', () => {
+        expect(index_1.senegraphHapi).to.be.a('function');
     });
-    it('sengraph.attributes should be an object', () => {
-        expect(index_1.senegraph.attributes).to.be.an('object');
+    it('senegraphHapi.attributes should be an object', () => {
+        expect(index_1.senegraphHapi.attributes).to.be.an('object');
     });
 });
 function createApp(options, done) {
@@ -29,7 +29,7 @@ function createApp(options, done) {
             port: 8000,
         });
         server.register({
-            register: index_1.senegraph,
+            register: index_1.senegraphHapi,
             options,
         }, (err) => {
             if (err) {
@@ -39,8 +39,8 @@ function createApp(options, done) {
         });
     }).nodeify(done);
 }
-describe('Senegraph Plugin Tests', () => {
-    it('senegraph plugin should not fail when registering', () => {
+describe('SenegraphHapi Plugin Tests', () => {
+    it('senegraphHapi plugin should not fail when registering', () => {
         return expect(createApp({
             schema: testSimpleSchema_1.default,
             resolvers: {
@@ -52,7 +52,7 @@ describe('Senegraph Plugin Tests', () => {
             }
         })).to.be.fulfilled;
     });
-    it('senegraph plugin should add route handler and call simple graphql query', () => {
+    it('senegraphHapi plugin should add route handler and call simple graphql query', () => {
         return createApp({
             schema: testSimpleSchema_1.default,
             resolvers: testSimpleResolvers_1.default,
@@ -66,7 +66,7 @@ describe('Senegraph Plugin Tests', () => {
             });
         });
     });
-    it('senegraph plugin should add a rootValue', () => {
+    it('senegraphHapi plugin should add a rootValue', () => {
         return createApp({
             schema: testSimpleSchema_1.default,
             resolvers: {
@@ -94,7 +94,7 @@ describe('Senegraph Plugin Tests', () => {
             });
         });
     });
-    it('senegraph plugin should call perRequest on every request (twice)', () => {
+    it('senegraphHapi plugin should call perRequest on every request (twice)', () => {
         let options = {
             schema: testSimpleSchema_1.default,
             resolvers: testSimpleResolvers_1.default,
@@ -116,7 +116,7 @@ describe('Senegraph Plugin Tests', () => {
             });
         });
     });
-    it('senegraph plugin should call perRequest with promise on every request (once)', () => {
+    it('senegraphHapi plugin should call perRequest with promise on every request (once)', () => {
         let options = {
             schema: testSimpleSchema_1.default,
             resolvers: testSimpleResolvers_1.default,
@@ -138,7 +138,7 @@ describe('Senegraph Plugin Tests', () => {
             });
         });
     });
-    it('senegraph plugin should call resolver when queried (once)', () => {
+    it('senegraphHapi plugin should call resolver when queried (once)', () => {
         let options = {
             schema: testSimpleSchema_1.default,
             resolvers: testSimpleResolvers_1.default,
@@ -153,7 +153,7 @@ describe('Senegraph Plugin Tests', () => {
             });
         });
     });
-    it('senegraph plugin should call perRequest with seneca and request arguments', () => {
+    it('senegraphHapi plugin should call perRequest with seneca and request arguments', () => {
         let options = {
             schema: testSimpleSchema_1.default,
             resolvers: testSimpleResolvers_1.default,
@@ -171,7 +171,7 @@ describe('Senegraph Plugin Tests', () => {
             });
         });
     });
-    it('senegraph plugin should call perRequest and return error if it occurs', () => {
+    it('senegraphHapi plugin should call perRequest and return error if it occurs', () => {
         let options = {
             schema: testSimpleSchema_1.default,
             resolvers: testSimpleResolvers_1.default,
@@ -189,7 +189,7 @@ describe('Senegraph Plugin Tests', () => {
             });
         });
     });
-    it('senegraph plugin should call perRequest and return error if it occurs in Promise', () => {
+    it('senegraphHapi plugin should call perRequest and return error if it occurs in Promise', () => {
         let options = {
             schema: testSimpleSchema_1.default,
             resolvers: testSimpleResolvers_1.default,
@@ -211,7 +211,7 @@ describe('Senegraph Plugin Tests', () => {
             });
         });
     });
-    it('senegraph plugin should provide the seneca in resolvers context', () => {
+    it('senegraphHapi plugin should provide the seneca in resolvers context', () => {
         let options = {
             schema: testSimpleSchema_1.default,
             resolvers: {
@@ -236,7 +236,7 @@ describe('Senegraph Plugin Tests', () => {
             });
         });
     });
-    it('senegraph plugin should pass a variable into resolver', () => {
+    it('senegraphHapi plugin should pass a variable into resolver', () => {
         let options = {
             schema: testSchemaWithVariables_1.default,
             resolvers: {
@@ -263,7 +263,7 @@ describe('Senegraph Plugin Tests', () => {
             });
         });
     });
-    it('senegraph plugin should setup seneca with promise', () => {
+    it('senegraphHapi plugin should setup seneca with promise', () => {
         let options = {
             schema: testSimpleSchema_1.default,
             resolvers: testSimpleResolvers_1.default,
@@ -282,7 +282,7 @@ describe('Senegraph Plugin Tests', () => {
             });
         });
     });
-    it('senegraph plugin should add a custom context and rootValue', () => {
+    it('senegraphHapi plugin should add a custom context and rootValue', () => {
         let options = {
             schema: testSimpleSchema_1.default,
             resolvers: {
@@ -311,7 +311,7 @@ describe('Senegraph Plugin Tests', () => {
             });
         });
     });
-    it('senegraph plugin should add a custom context and rootValue with promise', () => {
+    it('senegraphHapi plugin should add a custom context and rootValue with promise', () => {
         let options = {
             schema: testSimpleSchema_1.default,
             resolvers: {
@@ -344,7 +344,7 @@ describe('Senegraph Plugin Tests', () => {
             });
         });
     });
-    it('senegraph plugin should pass the integration tests', () => {
+    it('senegraphHapi plugin should pass the integration tests', () => {
         let options = {
             schema: `
         type Query {
@@ -402,4 +402,56 @@ describe('Senegraph Plugin Tests', () => {
         });
     });
 });
-//# sourceMappingURL=senegraphTest.js.map
+it('senegraphHapi plugin should pass the integration tests with promise (seneca.actWithPromise)', () => {
+    let options = {
+        schema: `
+      type Query {
+        hello(name: String!): String
+      }
+    `,
+        resolvers: {
+            Query: {
+                hello: (root, args, context) => {
+                    return context.seneca.actWithPromise({
+                        role: 'greeter',
+                        cmd: 'sayHello',
+                        user: args.name,
+                    }).then((result) => {
+                        return result.message;
+                    });
+                }
+            }
+        },
+        setupSeneca: (seneca) => {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    seneca.add({ role: 'greeter', cmd: 'sayHello' }, (message, done) => {
+                        if (message.user) {
+                            done(null, { message: 'Hello ' + message.user });
+                        }
+                        else {
+                            done(new Error('You forgot to tell me who you are.'));
+                        }
+                    });
+                    resolve();
+                }, 100);
+            });
+        }
+    };
+    return createApp(options).then((app) => {
+        return request(app).post('/graphql').send({
+            query: 'query test($variable: String!) { hello(name: $variable) }',
+            variables: { variable: 'durisvk' },
+        }).then((res) => {
+            expect(res.body.data).to.deep.equal({ hello: 'Hello durisvk' });
+            return request(app).get('/graphql').query({
+                query: 'query test($variable: String!) { hello(name: $variable) }',
+                variables: '{ variable: "durisvk" }',
+            });
+        }).then((res) => {
+            expect(res.body.data).to.deep.equal({ hello: 'Hello durisvk' });
+            return res;
+        });
+    });
+});
+//# sourceMappingURL=senegraphHapiTest.js.map

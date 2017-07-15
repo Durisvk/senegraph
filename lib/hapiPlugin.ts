@@ -8,6 +8,9 @@ import * as _ from 'lodash';
 import * as JSON5 from 'json5';
 
 const seneca = Seneca();
+import { enrichSeneca, runPerRequest, IPerRequestResult } from './common';
+enrichSeneca(seneca);
+
 import * as Promise from 'bluebird';
 
 import * as Hoek from 'hoek';
@@ -19,7 +22,7 @@ export interface IRegister {
   attributes?: any;
 }
 
-export interface ISenegraphOptions {
+export interface ISenegraphHapiOptions {
   schema: string;
   resolvers: object;
   setupSeneca?: Function;
@@ -33,12 +36,7 @@ export interface IHapiQLOptions {
   hapiqlOptions: GraphiQL.GraphiQLData;
 }
 
-export interface IPerRequestResult {
-  context: object;
-  rootValue: object;
-}
-
-const senegraph: IRegister = function(server: Server, options: ISenegraphOptions, next: Function) {
+const senegraphHapi: IRegister = function(server: Server, options: ISenegraphHapiOptions, next: Function) {
 
   if (!options) {
     throw new Error('senegraph requires options. At least provide schema and resolvers.');
@@ -62,9 +60,9 @@ const senegraph: IRegister = function(server: Server, options: ISenegraphOptions
   }
 };
 
-senegraph.attributes = {
+senegraphHapi.attributes = {
   name: 'senegraph',
-  version: '0.0.6',
+  version: '0.0.7',
   pkg: require('../package.json'),
 };
 
@@ -84,7 +82,7 @@ const hapiql: IRegister = function(server: Server, options: IHapiQLOptions, next
 
 hapiql.attributes = {
   name: 'hapiql',
-  version: '0.0.6',
+  version: '0.0.7',
   pkg: require('../package.json'),
 };
 
@@ -98,7 +96,7 @@ _internals.isPromise = function(subj: any) {
   return false;
 };
 
-_internals.setupGraphQLRoute = function(server: Server, options: ISenegraphOptions) {
+_internals.setupGraphQLRoute = function(server: Server, options: ISenegraphHapiOptions) {
   const def: any = {
     typeDefs: options.schema,
     resolvers: options.resolvers,
@@ -110,10 +108,10 @@ _internals.setupGraphQLRoute = function(server: Server, options: ISenegraphOptio
     path: options.path || '/graphql',
     method: options.methods || ['POST', 'GET'],
     handler: (request: Request, reply: ReplyNoContinue) => {
-      _internals.runPerRequest(options, request, reply, seneca)
+      runPerRequest(options, request, reply, seneca)
         .then((userParams: IPerRequestResult | Error) => {
           if (_.isError(userParams)) {
-            return reply({errors: [{ message: 'Failed on perRequest with message: ' + userParams.message }]});
+            return reply({ errors: [{ message: 'Failed on perRequest with message: ' + userParams.message }] });
           }
           _internals.executeGraphQLQuery(request, reply, execSchema, <IPerRequestResult>userParams);
         })
@@ -132,64 +130,6 @@ _internals.setupGraphiQLRoute = function(server: Server, options: IHapiQLOptions
         reply(graphiqlString).header('Content-Type', 'text/html');
       }, error => reply(error));
     },
-  });
-};
-
-_internals.runPerRequest = function(options: ISenegraphOptions, request: Request, reply: ReplyNoContinue) {
-  return new Promise((resolve, reject) => {
-    if (_.isUndefined(options.perRequest)) {
-      resolve({});
-      return;
-    }
-
-    let promise = null;
-    if (_.isFunction(options.perRequest)) {
-      let result = null;
-      try {
-        result = (<Function>options.perRequest).call(seneca, seneca, request);
-      } catch (e) {
-        promise = Promise.resolve(e);
-      }
-      if (!_.isNull(result) && !_.isUndefined(result)) {
-        if (_internals.isPromise(result)) {
-          promise = result;
-        } else if (_.isObject(result)) {
-          promise = Promise.resolve(result);
-        } else if (_.isError(result)) {
-          promise = Promise.resolve(result);
-        } else {
-          const type = typeof result;
-          return reject(new Error(`Invalid perRequest option type. Should be either Promise<object>,
-            Function<Promise<object>> or Function<object>, got: ${type}`));
-        }
-      } else {
-        promise = Promise.resolve({});
-      }
-    } else if (_internals.isPromise(options.perRequest)) {
-      promise = options.perRequest;
-    } else {
-      const type = typeof options.perRequest;
-      return reject(new Error(`Invalid perRequest option type. Should be either Promise<object>,
-        Function<Promise<object>> or Function<object>, got: ${type}`));
-    }
-
-    promise.then((result: object) => {
-      if (_.isObject(result) || _.isError(result)) {
-        resolve(result);
-      } else {
-        const type = typeof result;
-        return reject(new Error(`Invalid perRequest option resulting type. Should be either Promise<object>,
-          Function<Promise<object>> or Function<object>, got result: ${type}`));
-      }
-    })
-    .catch((err: Error) => {
-      if (_.isError(err)) {
-        resolve(err);
-      } else {
-        const type = typeof err;
-        return reject(new Error(`The rejection should contain Error. Got: ${type}`));
-      }
-    });
   });
 };
 
@@ -229,7 +169,7 @@ _internals.executeGraphQLQuery = function(request: Request, reply: ReplyNoContin
     .then((result: any) => {
       reply(result);
     })
-    .catch(console.log);
+    .catch(console.error);
 };
 
-export { senegraph, hapiql };
+export { senegraphHapi, hapiql };

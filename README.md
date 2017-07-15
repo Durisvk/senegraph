@@ -5,7 +5,7 @@
 Do you like **Microservices**?
 Do you like **GraphQL**?
 
-Me too! Let me then propose this simple plugin for *HapiJS* to you. It's fairly simple and flexible tool for creating API endpoints.
+Me too! Let me then propose this simple plugin for *HapiJS* and *Express Middleware* to you. It's fairly simple and flexible tool for creating API endpoints.
 
 ### Installation:
 ```
@@ -14,11 +14,12 @@ npm install --save senegraph
 
 ### Usage:
 
+##### HAPI JS :
 Here is a simple setup for *HapiJS*:
 
 ```javascript
 import * as hapi from 'hapi';
-import { senegraph, hapiql } from 'senegraph';
+import { senegraphHapi, hapiql } from 'senegraph';
 
 // setup Hapi server
 const server = new hapi.Server();
@@ -26,7 +27,7 @@ server.connection({ port: 3000 });
 
 // register the plugins
 server.register([{
-    register: senegraph,
+    register: senegraphHapi,
     options: senegraphOptions,
 }, {
     register: hapiql,
@@ -147,7 +148,7 @@ cool isn't it? You can do for example authentication on every single request.
 
 ## API
 
-**Senegraph options:**
+**SenegraphHapi options:**
 
 |    schema   |                              String!                             |                                       Containing the schema as string. This option is required.                                       |
 |:-----------:|:----------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------:|
@@ -158,3 +159,28 @@ cool isn't it? You can do for example authentication on every single request.
 |  perRequest | Promise<Object> OR Function<Object> OR Function<Promise<Object>> | Is being called on every request. Can be Promise or function returning object or function returning  Promise. This option is optional |
 
 Check out this video: https://youtu.be/VWPVrJU2upw
+
+
+##### EXPRESS :
+
+```js
+import * as Express from 'express'
+import { senegraphExpress, expressiql }
+
+const app = Express();
+
+app.use('/graphql', senegraphExpress(senegraphOptions));
+app.use('/graphql', expressiql({ endpointURL: '/graphql' }));
+```
+
+Now the senegraphOptions could look the same as in Hapi example...
+
+## API
+
+**SenegraphExpress Options:**
+
+|    schema   |                              String!                             |                                       Containing the schema as string. This option is required.                                       |
+|:-----------:|:----------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------:|
+|  resolvers  |                              Object!                             |                               Containing the resolvers of your graphql schema. This option is required.                               |
+| setupSeneca |                      Function (seneca) => {}                     |                                       Is being called at the beginning. This option is optional.                                      |
+|  perRequest | Promise<Object> OR Function<Object> OR Function<Promise<Object>> | Is being called on every request. Can be Promise or function returning object or function returning  Promise. This option is optional |
