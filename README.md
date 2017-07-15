@@ -62,9 +62,10 @@ const senegraphOptions = {
             if(message.user) {
                 done(null, { message: 'Hello ' + message.user });
             } else {
-                done(new Error('You forgot to tell me who you are');
+                done(new Error('You forgot to tell me who you are'));
+            }
         });
-    }
+    },
     // Setting up the schema (for this example it's pretty simple
     // but you can for example split it into multiple modules
     schema: `
@@ -170,7 +171,9 @@ import { senegraphExpress, expressiql }
 const app = Express();
 
 app.use('/graphql', senegraphExpress(senegraphOptions));
-app.use('/graphql', expressiql({ endpointURL: '/graphql' }));
+app.use('/graphiql', expressiql({ endpointURL: '/graphql' }));
+
+app.listen(3000)
 ```
 
 Now the senegraphOptions could look the same as in Hapi example...

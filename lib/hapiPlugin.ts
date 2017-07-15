@@ -62,7 +62,7 @@ const senegraphHapi: IRegister = function(server: Server, options: ISenegraphHap
 
 senegraphHapi.attributes = {
   name: 'senegraph',
-  version: '0.0.7',
+  version: '0.0.8',
   pkg: require('../package.json'),
 };
 
@@ -82,7 +82,7 @@ const hapiql: IRegister = function(server: Server, options: IHapiQLOptions, next
 
 hapiql.attributes = {
   name: 'hapiql',
-  version: '0.0.7',
+  version: '0.0.8',
   pkg: require('../package.json'),
 };
 
