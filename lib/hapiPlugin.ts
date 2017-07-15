@@ -8,11 +8,10 @@ import * as _ from 'lodash';
 import * as JSON5 from 'json5';
 
 let seneca: any = null;
-import { enrichSeneca, runPerRequest, IPerRequestResult } from './common';
+import { enrichSeneca, runPerRequest,
+  IPerRequestResult, applyToDefaultsWithoutCopy } from './common';
 
 import * as Promise from 'bluebird';
-
-import * as Hoek from 'hoek';
 
 const _internals: any = {};
 
@@ -66,7 +65,7 @@ const senegraphHapi: IRegister = function(server: Server, options: ISenegraphHap
 
 senegraphHapi.attributes = {
   name: 'senegraph',
-  version: '0.0.9',
+  version: '0.0.10',
   pkg: require('../package.json'),
 };
 
@@ -86,7 +85,7 @@ const hapiql: IRegister = function(server: Server, options: IHapiQLOptions, next
 
 hapiql.attributes = {
   name: 'hapiql',
-  version: '0.0.9',
+  version: '0.0.10',
   pkg: require('../package.json'),
 };
 
@@ -162,7 +161,7 @@ _internals.executeGraphQLQuery = function(request: Request, reply: ReplyNoContin
   if (!userParams.context) {
     userParams.context = {};
   }
-  context = Hoek.applyToDefaults(context, userParams.context);
+  context = applyToDefaultsWithoutCopy(context, userParams.context);
   const rootValue = userParams.rootValue;
   const query = _internals.getQueryFromRequest(request);
   let vars = _internals.getVariablesFromRequest(request);

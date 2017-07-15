@@ -71,6 +71,15 @@ const runPerRequest = function(options: any, request: any, reply: any, seneca: a
   });
 };
 
+const applyToDefaultsWithoutCopy = function(defaults: any, options: any) {
+  Object.keys(options).map((key) => {
+    if (!defaults[key]) {
+      defaults[key] = options[key];
+    }
+  });
+  return defaults;
+};
+
 _internals.isPromise = function(subj: any) {
   if (!subj) {
     return false;
@@ -82,4 +91,4 @@ _internals.isPromise = function(subj: any) {
 };
 
 
-export { runPerRequest };
+export { runPerRequest, applyToDefaultsWithoutCopy };

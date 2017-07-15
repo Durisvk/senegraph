@@ -5,13 +5,13 @@ import { graphql } from 'graphql';
 import * as Seneca from 'seneca';
 import * as GraphiQL from './graphiql/resolveGraphiQLString';
 import * as _ from 'lodash';
-import * as Hoek from 'hoek';
 import * as JSON5 from 'json5';
 import * as bodyParser from 'body-parser';
 
 
 let seneca: any = null;
-import { enrichSeneca, runPerRequest, IPerRequestResult } from './common';
+import { enrichSeneca, runPerRequest,
+  IPerRequestResult, applyToDefaultsWithoutCopy } from './common';
 
 export interface ISenegraphExpressOptions {
   schema: string;
@@ -89,7 +89,7 @@ _internals.executeGraphQLQuery = (request: Express.Request, response: Express.Re
   if (!userParams.context) {
     userParams.context = {};
   }
-  context = Hoek.applyToDefaults(context, userParams.context);
+  context = applyToDefaultsWithoutCopy(context, userParams.context);
 
   const rootValue = userParams.rootValue;
 
