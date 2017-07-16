@@ -1,6 +1,6 @@
 # Senegraph
 
-### HapiJS plugin connecting SenecaJS and GraphQL:
+### HapiJS and Express plugin connecting SenecaJS and GraphQL:
 
 Do you like **Microservices**?
 Do you like **GraphQL**?
@@ -192,6 +192,10 @@ Now the senegraphOptions could look the same as in Hapi example...
 |  setupSeneca  |                      Function (seneca) => {}                     |                                       Is being called at the beginning. This option is optional.                                      |       false       |
 |   perRequest  | Promise<Object> OR Function<Object> OR Function<Promise<Object>> | Is being called on every request. Can be Promise or function returning object or function returning  Promise. This option is optional |       false       |
 | senecaOptions |                              Object                              |                                        The seneca instantiating options e.g. { log: 'silent' }                                        | false Default: {} |
+
+
+Check out the video on how to use `Senegraph` with `Express`:
+https://youtu.be/-XHN1T6r_R4
 
 
 On both server frameworks you can run `seneca.actWithPromise` which is the `act` returning a promise.
