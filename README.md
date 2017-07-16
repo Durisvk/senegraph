@@ -123,7 +123,7 @@ Here's how you do that:
     resolvers: {
       Query: {
         hello: ({ myRootData }, args, { seneca, myContextData }) => {
-          // use myRootData and myContextData
+          // use myRootData = 'random data2' and myContextData = 'random data1'
           return 'world';
         }
       }
@@ -135,7 +135,7 @@ Here's how you do that:
       return new Promise((resolve) => {
         setTimeout(() => {
           resolve({
-            // returns context used in the next graphql call
+            // returns context and rootValue used in the next graphql call
             context: { myContextData: 'random data1' },
             rootValue: { myRootData: 'random data2' },
           });
@@ -151,16 +151,16 @@ cool isn't it? You can do for example authentication on every single request.
 
 **SenegraphHapi options:**
 
-|    schema   |                              String!                             |                                       Containing the schema as string. This option is required.                                       |
-|:-----------:|:----------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------:|
-|  resolvers  |                              Object!                             |                               Containing the resolvers of your graphql schema. This option is required.                               |
-| setupSeneca |                      Function (seneca) => {}                     |                                       Is being called at the beginning. This option is optional.                                      |
-|     path    |                              String                              |                                Default: '/graphql', Sets the API endpoint url. This option is optional                                |
-|   methods   |                    Array ['GET', 'POST', ...]                    |                      Default: ['GET', 'POST'], Sets the method accepted by the endpoint. This option is optional                      |
-|  perRequest | Promise<Object> OR Function<Object> OR Function<Promise<Object>> | Is being called on every request. Can be Promise or function returning object or function returning  Promise. This option is optional |
+|     option    |                               type                               |                                                              description                                                              |            required            |
+|:-------------:|:----------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------:|:------------------------------:|
+|     schema    |                              String!                             |                                                                                                                                       |              true              |
+|   resolvers   |                         Object! or Array                         |                                            Containing the resolvers of your graphql schema.                                           |              true              |
+|      path     |                              String                              |                                                    The url for the endpoint route.                                                    |    false Default: '/graphql'   |
+|    methods    |                      String | Array<String>                      |                                               The methods supported for graphql endpoint                                              | false Default: ['GET', 'POST'] |
+|  setupSeneca  |                      Function (seneca) => {}                     |                                       Is being called at the beginning. This option is optional.                                      |              false             |
+|   perRequest  | Promise<Object> OR Function<Object> OR Function<Promise<Object>> | Is being called on every request. Can be Promise or function returning object or function returning  Promise. This option is optional |              false             |
+| senecaOptions |                              Object                              |                                        The seneca instantiating options e.g. { log: 'silent' }                                        |        false Default: {}       |
 
-
-+ You can add a senecaOptions to modify the logging or so.
 
 Check out this video: https://youtu.be/VWPVrJU2upw
 
@@ -185,14 +185,13 @@ Now the senegraphOptions could look the same as in Hapi example...
 
 **SenegraphExpress Options:**
 
-|    schema   |                              String!                             |                                       Containing the schema as string. This option is required.                                       |
-|:-----------:|:----------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------:|
-|  resolvers  |                              Object!                             |                               Containing the resolvers of your graphql schema. This option is required.                               |
-| setupSeneca |                      Function (seneca) => {}                     |                                       Is being called at the beginning. This option is optional.                                      |
-|  perRequest | Promise<Object> OR Function<Object> OR Function<Promise<Object>> | Is being called on every request. Can be Promise or function returning object or function returning  Promise. This option is optional |
-
-
-+ You can add a senecaOptions to modify the logging or so.
+|     option    |                               type                               |                                                              description                                                              |      required     |
+|:-------------:|:----------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------:|:-----------------:|
+|     schema    |                              String!                             |                                                                                                                                       |        true       |
+|   resolvers   |                         Object! or Array                         |                                            Containing the resolvers of your graphql schema.                                           |        true       |
+|  setupSeneca  |                      Function (seneca) => {}                     |                                       Is being called at the beginning. This option is optional.                                      |       false       |
+|   perRequest  | Promise<Object> OR Function<Object> OR Function<Promise<Object>> | Is being called on every request. Can be Promise or function returning object or function returning  Promise. This option is optional |       false       |
+| senecaOptions |                              Object                              |                                        The seneca instantiating options e.g. { log: 'silent' }                                        | false Default: {} |
 
 
 On both server frameworks you can run `seneca.actWithPromise` which is the `act` returning a promise.

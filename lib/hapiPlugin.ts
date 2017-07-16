@@ -22,7 +22,7 @@ export interface IRegister {
 
 export interface ISenegraphHapiOptions {
   schema: string;
-  resolvers: object;
+  resolvers: any | Array<any>;
   setupSeneca?: Function;
   path?: string;
   methods?: HTTP_METHODS_PARTIAL | '*' | (HTTP_METHODS_PARTIAL | '*')[];
@@ -65,7 +65,7 @@ const senegraphHapi: IRegister = function(server: Server, options: ISenegraphHap
 
 senegraphHapi.attributes = {
   name: 'senegraph',
-  version: '0.0.10',
+  version: '0.0.11',
   pkg: require('../package.json'),
 };
 
@@ -85,7 +85,7 @@ const hapiql: IRegister = function(server: Server, options: IHapiQLOptions, next
 
 hapiql.attributes = {
   name: 'hapiql',
-  version: '0.0.10',
+  version: '0.0.11',
   pkg: require('../package.json'),
 };
 

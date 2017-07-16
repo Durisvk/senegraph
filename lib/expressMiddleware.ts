@@ -15,7 +15,7 @@ import { enrichSeneca, runPerRequest,
 
 export interface ISenegraphExpressOptions {
   schema: string;
-  resolvers: object;
+  resolvers: any | Array<any>;
   setupSeneca?: Function;
   perRequest?: Promise<object> | Function;
   senecaOptions?: any;
