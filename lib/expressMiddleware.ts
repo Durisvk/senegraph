@@ -75,11 +75,19 @@ const expressiql = function(options: ExpressiQLOptions) {
 };
 
 _internals.getQueryFromRequest = (request: Express.Request) => {
-  return request.body.query;
+  if (request.body.query) {
+    return request.body.query;
+  } else if (request.query.query) {
+    return request.query.query;
+  }
 };
 
 _internals.getVariablesFromRequest = (request: Express.Request) => {
-  return request.body.variables;
+  if (request.body.variables) {
+    return request.body.variables;
+  } else if (request.query.variables) {
+    return request.query.variables;
+  }
 };
 
 _internals.executeGraphQLQuery = (request: Express.Request, response: Express.Response,
@@ -95,6 +103,7 @@ _internals.executeGraphQLQuery = (request: Express.Request, response: Express.Re
 
   const query = _internals.getQueryFromRequest(request);
   let vars = _internals.getVariablesFromRequest(request);
+
   if (typeof vars === 'string') {
     vars = JSON5.parse(vars);
   }
