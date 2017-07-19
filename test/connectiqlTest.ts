@@ -2,24 +2,24 @@ import { expect } from 'chai';
 
 const request = require('supertest-as-promised');
 
-import { expressiql, ExpressiQLOptions } from '../lib/index';
+import { connectiql, ConnectiQLOptions } from '../lib/index';
 
-import * as Express from 'express';
+import * as Connect from 'connect';
 
-describe('ExpressiQL Types Tests', () => {
+describe('ConnectiQL Types Tests', () => {
   it('should be a function', () => {
-    expect(expressiql).to.be.a('function');
+    expect(connectiql).to.be.a('function');
   });
 });
 
-function createApp(options: ExpressiQLOptions) {
-  const app = Express();
-  app.use('/graphiql', expressiql(options));
+function createApp(options: ConnectiQLOptions) {
+  const app = Connect();
+  app.use('/graphiql', connectiql(options));
   return app;
 }
 
 
-describe('ExpressiQL Plugin Tests', () => {
+describe('ConnectiQL Plugin Tests', () => {
   it('should render a page', () => {
     const app = createApp({
       endpointURL: '/graphql'

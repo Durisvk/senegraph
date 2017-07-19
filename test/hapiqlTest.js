@@ -6,10 +6,10 @@ const index_1 = require("../lib/index");
 const hapi = require("hapi");
 const Promise = require("bluebird");
 describe('HapiQL Types Tests', () => {
-    it('hapiql should be a function', () => {
+    it('should be a function', () => {
         chai_1.expect(index_1.hapiql).to.be.a('function');
     });
-    it('hapiql.attributes should be an object', () => {
+    it('.attributes should be an object', () => {
         chai_1.expect(index_1.hapiql.attributes).to.be.an('object');
     });
 });
@@ -32,7 +32,7 @@ function createApp(options, done) {
     }).nodeify(done);
 }
 describe('HapiQL Plugin Tests', () => {
-    it('hapiql should render a page', () => {
+    it('should render a page', () => {
         return createApp({
             path: '/graphiql',
             hapiqlOptions: {

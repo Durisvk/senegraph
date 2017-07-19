@@ -162,6 +162,27 @@ cool isn't it? You can do for example authentication on every single request.
 | senecaOptions |                              Object                              |                                        The seneca instantiating options e.g. { log: 'silent' }                                        |        false Default: {}       |
 
 
+HapiQL takes this options:
+
+|     option    |  type  |                                 description                                |                  required                 |
+|:-------------:|:------:|:--------------------------------------------------------------------------:|:-----------------------------------------:|
+|      path     | String |           The path on which the server should serve for graphiql           |         false Default: '/graphiql'        |
+| hapiqlOptions | Object | The options for the hapiql contains endpoint and many more described below | true At least endpoint should be provided |
+
+
+
+hapiqlOptions take these values:
+
+|         option        |  type  |                      description                      | required |
+|:---------------------:|:------:|:-----------------------------------------------------:|:--------:|
+| endpointURL           | String | the graphql endpoint by default on address '/graphql' | true     |
+| subscriptionsEndpoint | String | Endpoint for subscriptions                            | false    |
+| query                 | String | The default query                                     | false    |
+| variables             | Object | The default variables                                 | false    |
+| operationName         | String | The default operation name                            | false    |
+| result                | Object | The default results                                   | false    |
+
+
 Check out this video: https://youtu.be/VWPVrJU2upw
 
 
@@ -194,8 +215,47 @@ Now the senegraphOptions could look the same as in Hapi example...
 | senecaOptions |                              Object                              |                                        The seneca instantiating options e.g. { log: 'silent' }                                        | false Default: {} |
 
 
+The expressiql options should be in this manner:
+
+|         option        |  type  |                      description                      | required |
+|:---------------------:|:------:|:-----------------------------------------------------:|:--------:|
+| endpointURL           | String | the graphql endpoint by default on address '/graphql' | true     |
+| subscriptionsEndpoint | String | Endpoint for subscriptions                            | false    |
+| query                 | String | The default query                                     | false    |
+| variables             | Object | The default variables                                 | false    |
+| operationName         | String | The default operation name                            | false    |
+| result                | Object | The default results                                   | false    |
+
+
+
+
 Check out the video on how to use `Senegraph` with `Express`:
 https://youtu.be/-XHN1T6r_R4
+
+##### CONNECT :
+
+With connect framework it's very similar to Express.
+
+We simply instantiate our server and use the senegraph middleware.
+
+```js
+import * as Connect from 'connect'
+import * as http from 'http'
+import { senegraphConnect, connectiql }
+
+const app = Express();
+
+app.use('/graphql', senegraphConnect(senegraphOptions));
+app.use('/graphiql', connectiql({ endpointURL: '/graphql' }));
+
+http.createServer(app).listen(3000);
+```
+
+
+## API
+
+The API is the same as in Senegraph Express implementation.
+
 
 
 On both server frameworks you can run `seneca.actWithPromise` which is the `act` returning a promise.

@@ -1,6 +1,6 @@
 {
   "name": "senegraph",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Hapi JS and Express plugin connecting SenecaJS with GraphQL",
   "main": "index.js",
   "scripts": {
@@ -25,6 +25,7 @@
     "@types/body-parser": "^1.16.4",
     "@types/chai": "^4.0.1",
     "@types/chai-as-promised": "0.0.31",
+    "@types/connect": "^3.4.30",
     "@types/express": "^4.0.36",
     "@types/graphql": "^0.9.3",
     "@types/hapi": "^16.1.6",
@@ -35,10 +36,13 @@
     "@types/sinon": "^2.3.2",
     "chai": "^4.0.2",
     "chai-as-promised": "^7.1.1",
+    "connect": "^3.6.2",
+    "express": "^4.15.3",
     "grunt": "^1.0.1",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-mocha-test": "^0.13.2",
     "grunt-ts": "^6.0.0-beta.16",
+    "hapi": "^16.4.3",
     "husky": "^0.14.3",
     "istanbul": "1.0.0-alpha.2",
     "mocha": "^3.4.2",
@@ -50,10 +54,8 @@
   "dependencies": {
     "bluebird": "^3.5.0",
     "body-parser": "^1.17.2",
-    "express": "^4.15.3",
     "graphql": "^0.10.3",
     "graphql-tools": "^1.1.0",
-    "hapi": "^16.4.3",
     "json5": "^0.5.1",
     "lodash": "^4.17.4",
     "seneca": "^3.4.1"

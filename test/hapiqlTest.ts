@@ -9,10 +9,10 @@ import * as hapi from 'hapi';
 import * as Promise from 'bluebird';
 
 describe('HapiQL Types Tests', () => {
-  it('hapiql should be a function', () => {
+  it('should be a function', () => {
     expect(hapiql).to.be.a('function');
   });
-  it('hapiql.attributes should be an object', () => {
+  it('.attributes should be an object', () => {
     expect(hapiql.attributes).to.be.an('object');
   });
 });
@@ -40,7 +40,7 @@ function createApp(options: IHapiQLOptions, done?: Function): Promise<hapi.Serve
 
 
 describe('HapiQL Plugin Tests', () => {
-  it('hapiql should render a page', () => {
+  it('should render a page', () => {
     return createApp({
       path: '/graphiql',
       hapiqlOptions: {

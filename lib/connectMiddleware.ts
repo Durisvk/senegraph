@@ -1,4 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
+import * as HTTP from 'http';
+import * as Connect from 'connect';
 
 import { makeExecutableSchema } from 'graphql-tools';
 import { graphql } from 'graphql';
@@ -7,13 +8,13 @@ import * as GraphiQL from './graphiql/resolveGraphiQLString';
 import * as _ from 'lodash';
 import * as JSON5 from 'json5';
 import * as bodyParser from 'body-parser';
-
-
-let seneca: any = null;
+import * as Promise from 'bluebird';
 import { enrichSeneca, runPerRequest,
   IPerRequestResult, applyToDefaultsWithoutCopy } from './common';
 
-export interface ISenegraphExpressOptions {
+import * as url from 'url';
+
+export interface ISenegraphConnectOptions {
   schema: string;
   resolvers: any | Array<any>;
   setupSeneca?: Function;
@@ -21,7 +22,7 @@ export interface ISenegraphExpressOptions {
   senecaOptions?: any;
 }
 
-export type ExpressiQLOptions = {
+export type ConnectiQLOptions = {
   endpointURL: string,
   subscriptionsEndpoint?: string,
   query?: string,
@@ -31,10 +32,11 @@ export type ExpressiQLOptions = {
   passHeader?: string,
 };
 
+let seneca: any;
 
 const _internals: any = {};
 
-const senegraphExpress = function(options: ISenegraphExpressOptions) {
+const senegraphConnect = function(options: ISenegraphConnectOptions) {
 
   seneca = Seneca(options.senecaOptions);
   enrichSeneca(seneca);
@@ -47,52 +49,41 @@ const senegraphExpress = function(options: ISenegraphExpressOptions) {
     resolvers: options.resolvers,
   };
 
-  const execSchema = makeExecutableSchema(def);
+  const execSchema: any = makeExecutableSchema(def);
 
-  return function(req: Request, res: Response, next: NextFunction) {
+  return function(req: HTTP.ServerRequest, res: HTTP.ServerResponse, next: any) {
+    res.setHeader('Content-Type', 'application/json');
     runPerRequest(options, req, res, seneca)
-      .then((userParams: IPerRequestResult | Error) => {
+      .then((userParams: IPerRequestResult) => {
         if (_.isError(userParams)) {
-          return res.send({ errors: [{ message: 'Failed on perRequest with message: ' + userParams.message }] });
+          return res.end(JSON.stringify({ errors: [{ message: 'Failed on perRequest with message: ' + userParams.message }] }));
         }
-        bodyParser.json({})(req, res, () => {
+        bodyParser.json({})(<any>req, <any>res, () => {
           _internals.executeGraphQLQuery(req, res, execSchema, <IPerRequestResult>userParams, next);
         });
       });
   };
 };
 
-const expressiql = function(options: ExpressiQLOptions) {
-  return function(req: Request, res: Response, next: NextFunction) {
-    bodyParser.json({})(req, res, () => {
-      const query = req.body;
+const connectiql = function(options: ConnectiQLOptions) {
+  return function(req: HTTP.ServerRequest, res: HTTP.ServerResponse, next: any) {
+    bodyParser.json({})(<any> req, <any> res, () => {
+      let query = null;
+      if (req.method === 'GET') {
+        const q = _internals.getQuery(req);
+        query = q.query;
+      } else {
+        query = (<any>req).body.query;
+      }
       GraphiQL.resolveGraphiQLString(query, options, req).then((graphiqlString) => {
-        res.send(graphiqlString);
+        res.end(graphiqlString);
         next();
       });
     });
   };
 };
 
-_internals.getQueryFromRequest = (request: Request) => {
-  if (request.body.query) {
-    return request.body.query;
-  } else if (request.query.query) {
-    return request.query.query;
-  }
-};
-
-_internals.getVariablesFromRequest = (request: Request) => {
-  if (request.body.variables) {
-    return request.body.variables;
-  } else if (request.query.variables) {
-    return request.query.variables;
-  }
-};
-
-_internals.executeGraphQLQuery = (request: Request, response: Response,
-  execSchema: any, userParams: IPerRequestResult, next: NextFunction) => {
-
+_internals.executeGraphQLQuery = (req: any, res: any, execSchema: any, userParams: IPerRequestResult, next: any) => {
   let context = { seneca };
   if (!userParams.context) {
     userParams.context = {};
@@ -101,22 +92,36 @@ _internals.executeGraphQLQuery = (request: Request, response: Response,
 
   const rootValue = userParams.rootValue;
 
-  const query = _internals.getQueryFromRequest(request);
-  let vars = _internals.getVariablesFromRequest(request);
+  let query = null;
+  let vars = null;
+  if (req.method === 'GET') {
+    const q = _internals.getQuery(req);
+    query = q.query;
+    vars = q.variables;
+  } else {
+    query = req.body.query;
+    vars = req.body.variables;
+  }
 
   if (typeof vars === 'string') {
     vars = JSON5.parse(vars);
   }
   graphql(execSchema, query, rootValue, context, vars)
     .then((result: any) => {
-      response.send(result);
+      res.end(JSON.stringify(result));
       next();
     })
     .catch((err: Error) => {
       console.error(err);
       next();
     });
-
 };
 
-export { senegraphExpress, expressiql };
+_internals.getQuery = function(req: any) {
+  const urlParts = url.parse(req.url, true);
+  const query = urlParts.query;
+  return query;
+};
+
+
+export { senegraphConnect, connectiql };
