@@ -14,7 +14,7 @@ import { enrichSeneca, runPerRequest,
   IPerRequestResult, applyToDefaultsWithoutCopy } from './common';
 
 export interface ISenegraphExpressOptions {
-  schema: string;
+  schema: any;
   resolvers: any | Array<any>;
   setupSeneca?: Function;
   perRequest?: Promise<object> | Function;

@@ -21,7 +21,7 @@ export interface IRegister {
 }
 
 export interface ISenegraphHapiOptions {
-  schema: string;
+  schema: any;
   resolvers: any | Array<any>;
   setupSeneca?: Function;
   path?: string;
