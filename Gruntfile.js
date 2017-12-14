@@ -5,7 +5,7 @@ module.exports = function(grunt) {
       pkg: grunt.file.readJSON('package.json'),
       ts: {
       build: {
-          src: ["./index.ts", "lib/**/*.ts", "test/**/*.ts", "!node_modules/**/*.ts"],
+          src: ["./index.ts", "hapi/**/*.ts", "express/**/*.ts", "connect/**/*.ts", "lib/**/*.ts", "test/**/*.ts", "!node_modules/**/*.ts"],
           // Avoid compiling TypeScript files in node_modules
           options: {
 
