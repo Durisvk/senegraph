@@ -1,6 +1,6 @@
 {
   "name": "senegraph",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "Hapi JS and Express plugin connecting SenecaJS with GraphQL",
   "main": "index.js",
   "scripts": {
