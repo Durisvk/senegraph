@@ -1,1 +1,7 @@
-module.exports = require('./lib/index.js');
+"use strict";
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+Object.defineProperty(exports, "__esModule", { value: true });
+__export(require("./lib"));
+//# sourceMappingURL=index.js.map

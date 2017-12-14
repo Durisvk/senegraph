@@ -1,1 +1,1 @@
-{"version":3,"file":"testSimpleResolvers.js","sourceRoot":"","sources":["testSimpleResolvers.ts"],"names":[],"mappings":";;AAAA,kBAAe;IACb,KAAK,EAAE;QACL,KAAK,EAAE,CAAC,IAAQ,EAAE,IAAQ,EAAE,OAAW;YACrC,MAAM,CAAC,OAAO,CAAC;QACjB,CAAC;KACF;CACF,CAAA"}
+{"version":3,"file":"testSimpleResolvers.js","sourceRoot":"","sources":["testSimpleResolvers.ts"],"names":[],"mappings":";;AAAA,kBAAe;IACb,KAAK,EAAE;QACL,KAAK,EAAE,CAAC,IAAQ,EAAE,IAAQ,EAAE,OAAW,EAAE,EAAE;YACzC,MAAM,CAAC,OAAO,CAAC;QACjB,CAAC;KACF;CACF,CAAA"}

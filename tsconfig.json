@@ -9,7 +9,6 @@
     "noImplicitAny": false,
     "allowSyntheticDefaultImports": false,
     "pretty": true,
-    "noImplicitAny" : true,
     "removeComments": true,
     "lib": ["es6"],
     "allowJs": true,

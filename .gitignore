@@ -37,3 +37,4 @@ typings
 .dist
 
 .tscache
+.tscommand*
