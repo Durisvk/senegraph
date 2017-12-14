@@ -1,0 +1,1 @@
+export { senegraphConnect, connectiql, ConnectiQLOptions, ISenegraphConnectOptions } from '../lib/connectMiddleware';
