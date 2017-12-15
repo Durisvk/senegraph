@@ -39,7 +39,7 @@ function safeSerialize(data: any) {
 }
 
 function getFromParamsIfNotPresent(data: any, param: string) {
-  return data ? safeSerialize(data) : `getFromParams(${param})`;
+  return data ? safeSerialize(data) : `getFromParams('${param}')`;
 }
 
 export function renderGraphiQL(data: GraphiQLData): string {
