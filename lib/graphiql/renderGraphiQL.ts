@@ -38,6 +38,10 @@ function safeSerialize(data: any) {
   return data ? JSON.stringify(data).replace(/\//g, '\\/') : null;
 }
 
+function getFromParamsIfNotPresent(data: any, param: string) {
+  return data ? safeSerialize(data) : `getFromParams(${param})`;
+}
+
 export function renderGraphiQL(data: GraphiQLData): string {
   const endpointURL = data.endpointURL;
   const subscriptionsEndpoint = data.subscriptionsEndpoint;
@@ -154,6 +158,12 @@ export function renderGraphiQL(data: GraphiQLData): string {
     function updateURL() {
       history.replaceState(null, null, locationQuery(parameters) + window.location.hash);
     }
+    function getFromParams(key) {
+      if(parameters.hasOwnProperty(key)) {
+        return parameters[key];
+      }
+      return null;
+    }
     // Render <GraphiQL /> into the body.
     ReactDOM.render(
       React.createElement(GraphiQL, {
@@ -161,10 +171,10 @@ export function renderGraphiQL(data: GraphiQLData): string {
         onEditQuery: onEditQuery,
         onEditVariables: onEditVariables,
         onEditOperationName: onEditOperationName,
-        query: ${safeSerialize(queryString)},
+        query: ${getFromParamsIfNotPresent(queryString, 'query')},
         response: ${safeSerialize(resultString)},
-        variables: ${safeSerialize(variablesString)},
-        operationName: ${safeSerialize(operationName)},
+        variables: ${getFromParamsIfNotPresent(variablesString, 'variables')},
+        operationName: ${getFromParamsIfNotPresent(operationName, 'operationName')},
       }),
       document.body
     );
